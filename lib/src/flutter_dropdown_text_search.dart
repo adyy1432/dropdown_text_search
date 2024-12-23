@@ -47,7 +47,7 @@ class _DropdownTextSearch extends State<DropdownTextSearch> {
     sourceData = widget.items;
     focusNode = FocusNode();
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_){});
+    WidgetsBinding.instance.addPostFrameCallback((_){});
 
     focusNode.addListener((){
       if(focusNode.hasFocus){
@@ -67,7 +67,7 @@ class _DropdownTextSearch extends State<DropdownTextSearch> {
   }
 
   void showOverlay(){
-    final overlay = Overlay.of(context)!;
+    final overlay = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
 
@@ -131,16 +131,19 @@ class _DropdownTextSearch extends State<DropdownTextSearch> {
 
   @override
   Widget build(BuildContext context) {
-    return RawKeyboardListener(
+    return KeyboardListener(
       focusNode: focusNode,
-      onKey: (RawKeyEvent key){
-        if(key.isKeyPressed(LogicalKeyboardKey.arrowDown)){
+      onKeyEvent: (KeyEvent key){
+        if(HardwareKeyboard.instance
+            .isLogicalKeyPressed(LogicalKeyboardKey.arrowDown)){
           _selectedItem = _selectedItem<sourceData.length-1?_selectedItem+1:_selectedItem;
           scrollFun();
-        }else if(key.isKeyPressed(LogicalKeyboardKey.arrowUp)){
+        }else if(HardwareKeyboard.instance
+            .isLogicalKeyPressed(LogicalKeyboardKey.arrowUp)){
           _selectedItem = _selectedItem>0?_selectedItem-1:_selectedItem;
           scrollFun();
-        }else if(key.isKeyPressed(LogicalKeyboardKey.escape)){
+        }else if(HardwareKeyboard.instance
+            .isLogicalKeyPressed(LogicalKeyboardKey.escape)){
           if(widget.controller!=null){
             widget.controller!.clear();
           }
@@ -162,7 +165,7 @@ class _DropdownTextSearch extends State<DropdownTextSearch> {
           },
           onEditingComplete: widget.node?.nextFocus,
           cursorColor: Colors.black,
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.black),
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.black),
           onChanged: (val){
             if(val.isNotEmpty){
               sourceData = widget.items.where((element) =>
